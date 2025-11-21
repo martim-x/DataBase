@@ -1,0 +1,75 @@
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.564"
+    Build="16.0.4210.1">
+    <BatchSequence>
+        <Batch>
+            <Statements>
+                <StmtSimple
+                    StatementText="-- EXEC sp_helpindex N&apos;Заказчики&apos;;&#xa;-- EXEC sp_helpindex N&apos;Товары&apos;;&#xa;-- EXEC sp_helpindex N&apos;Заказы&apos;;&#xa;-- -- класторизированный индекс&#xa;-- drop table #EXPLRE&#xa;-- &#xa;-- CREATE TABLE #EXPLRE (&#xa;--     id INT PRIMARY KEY,&#xa;--     val INT&#xa;-- );&#xa;-- &#xa;-- DECLARE @I INT = 1;&#xa;-- &#xa;-- WHILE @I &lt;= 2000&#xa;-- BEGIN&#xa;--     INSERT INTO  #EXPLRE(id, val)&#xa;--     VALUES (@I, @I);&#xa;--     &#xa;--     SET @I = @I + 1;&#xa;-- END;&#xa;&#xa;-- CHECKPOINT;&#xa;-- &#xa;-- DBCC DROPCLEANBUFFERS;&#xa;-- SET SHOWPLAN_XML ON;&#xa;-- &#xa;SELECT * from #EXPLRE&#xa;-- where val &lt; 1000&#xa;where id &lt; 1000"
+                    StatementId="1" StatementCompId="1" StatementType="SELECT"
+                    RetrievedFromCache="false" StatementSubTreeCost="0.00586238"
+                    StatementEstRows="999" SecurityPolicyApplied="false"
+                    StatementOptmLevel="TRIVIAL" QueryHash="0xD2C5689FFD55B4FA"
+                    QueryPlanHash="0xC761D420198D1092" CardinalityEstimationModelVersion="160">
+                    <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false"
+                        CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true"
+                        ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false"></StatementSetOptions>
+                    <QueryPlan CachedPlanSize="16" CompileTime="5" CompileCPU="5"
+                        CompileMemory="152">
+                        <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0"
+                            GrantedMemory="0" MaxUsedMemory="0"></MemoryGrantInfo>
+                        <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="64204"
+                            EstimatedPagesCached="40128" EstimatedAvailableDegreeOfParallelism="5"
+                            MaxCompileMemory="3388016"></OptimizerHardwareDependentProperties>
+                        <OptimizerStatsUsage>
+                            <StatisticsInfo LastUpdate="2025-11-21T08:45:24.18"
+                                ModificationCount="0" SamplingPercent="100"
+                                Statistics="[PK__#EXPLRE___3213E83F195BEFFF]"
+                                Table="[#EXPLRE_____________________________________________________________________________________________________________000000000007]"
+                                Schema="[dbo]" Database="[tempdb]"></StatisticsInfo>
+                        </OptimizerStatsUsage>
+                        <RelOp NodeId="0" PhysicalOp="Clustered Index Seek"
+                            LogicalOp="Clustered Index Seek" EstimateRows="999"
+                            EstimatedRowsRead="999" EstimateIO="0.00460648" EstimateCPU="0.0012559"
+                            AvgRowSize="15" EstimatedTotalSubtreeCost="0.00586238"
+                            TableCardinality="2000" Parallel="0" EstimateRebinds="0"
+                            EstimateRewinds="0" EstimatedExecutionMode="Row">
+                            <OutputList>
+                                <ColumnReference Table="[#EXPLRE]" Column="id"></ColumnReference>
+                                <ColumnReference Table="[#EXPLRE]" Column="val"></ColumnReference>
+                            </OutputList>
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0"
+                                ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                    <DefinedValue>
+                                        <ColumnReference Table="[#EXPLRE]" Column="id"></ColumnReference>
+                                    </DefinedValue>
+                                    <DefinedValue>
+                                        <ColumnReference Table="[#EXPLRE]" Column="val"></ColumnReference>
+                                    </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[tempdb]" Schema="[dbo]" Table="[#EXPLRE]"
+                                    Index="[PK__#EXPLRE___3213E83F195BEFFF]" Storage="RowStore"></Object>
+                                <SeekPredicates>
+                                    <SeekPredicateNew>
+                                        <SeekKeys>
+                                            <EndRange ScanType="LT">
+                                                <RangeColumns>
+                                                    <ColumnReference Table="[#EXPLRE]" Column="id"></ColumnReference>
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                    <ScalarOperator ScalarString="(1000)">
+                                                        <Const ConstValue="(1000)"></Const>
+                                                    </ScalarOperator>
+                                                </RangeExpressions>
+                                            </EndRange>
+                                        </SeekKeys>
+                                    </SeekPredicateNew>
+                                </SeekPredicates>
+                            </IndexScan>
+                        </RelOp>
+                    </QueryPlan>
+                </StmtSimple>
+            </Statements>
+        </Batch>
+    </BatchSequence>
+</ShowPlanXML>

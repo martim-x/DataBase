@@ -1,0 +1,46 @@
+-- Индекс покрытия
+-- DROP TABLE #EXPLRE;
+-- 
+-- CREATE TABLE #EXPLRE (
+--     id INT,
+--     val INT,
+--     description NVARCHAR(100),
+--     category NVARCHAR(50)
+-- );
+-- 
+-- Быстрая вставка 20000 строк
+-- ;WITH Numbers AS (
+--     SELECT 1 AS num
+--     UNION ALL
+--     SELECT num + 1
+--     FROM Numbers
+--     WHERE num < 20000
+-- )
+-- INSERT INTO #EXPLRE (id, val, description, category)
+-- SELECT 
+--     num,
+--     num,
+--     'Описание_' + CAST(num AS NVARCHAR(10)),
+--     CASE WHEN num % 3 = 0 THEN 'A' WHEN num % 3 = 1 THEN 'B' ELSE 'C' END
+-- FROM Numbers
+-- OPTION (MAXRECURSION 0);
+-- 
+-- Создаем индекс покрытия
+-- CREATE NONCLUSTERED INDEX IX_EXPLRE_Covering ON #EXPLRE(val) INCLUDE (description, category);
+-- 
+-- CHECKPOINT;
+-- DBCC DROPCLEANBUFFERS;
+-- SET STATISTICS TIME ON;
+-- SET SHOWPLAN_XML ON;
+-- 
+-- Запрос, который использует покрытие
+-- SELECT val, description, category 
+-- FROM #EXPLRE 
+-- WHERE val < 10000;
+-- 
+
+select id from #EXPLRE
+where id < 10000
+
+-- SET SHOWPLAN_XML OFF;
+-- SET STATISTICS TIME OFF;

@@ -1,0 +1,73 @@
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.564"
+	Build="16.0.4210.1">
+	<BatchSequence>
+		<Batch>
+			<Statements>
+				<StmtSimple
+					StatementText="-- EXEC sp_helpindex N&apos;Заказчики&apos;;&#xa;-- EXEC sp_helpindex N&apos;Товары&apos;;&#xa;-- EXEC sp_helpindex N&apos;Заказы&apos;;&#xa;-- -- класторизированный индекс&#xa;-- drop table #EXPLRE&#xa;-- &#xa;-- CREATE TABLE #EXPLRE (&#xa;--     id INT PRIMARY KEY,&#xa;--     val INT&#xa;-- );&#xa;-- &#xa;-- DECLARE @I INT = 1;&#xa;-- &#xa;-- WHILE @I &lt;= 2000&#xa;-- BEGIN&#xa;--     INSERT INTO  #EXPLRE(id, val)&#xa;--     VALUES (@I, @I);&#xa;--     &#xa;--     SET @I = @I + 1;&#xa;-- END;&#xa;&#xa;-- CHECKPOINT;&#xa;-- &#xa;-- DBCC DROPCLEANBUFFERS;&#xa;-- SET SHOWPLAN_XML ON;&#xa;-- &#xa;SELECT * from #EXPLRE&#xa;where val &lt; 1000"
+					StatementId="1" StatementCompId="1" StatementType="SELECT"
+					RetrievedFromCache="false" StatementSubTreeCost="0.00844496"
+					StatementEstRows="999" SecurityPolicyApplied="false"
+					StatementOptmLevel="TRIVIAL" QueryHash="0xEDDF038888925B13"
+					QueryPlanHash="0xEC4994496EFC5223" CardinalityEstimationModelVersion="160">
+					<StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false"
+						CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true"
+						ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false"></StatementSetOptions>
+					<QueryPlan CachedPlanSize="16" CompileTime="7" CompileCPU="7"
+						CompileMemory="160">
+						<MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0"
+							GrantedMemory="0" MaxUsedMemory="0"></MemoryGrantInfo>
+						<OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="64204"
+							EstimatedPagesCached="40128" EstimatedAvailableDegreeOfParallelism="5"
+							MaxCompileMemory="3387864"></OptimizerHardwareDependentProperties>
+						<OptimizerStatsUsage>
+							<StatisticsInfo LastUpdate="2025-11-21T08:43:41.22"
+								ModificationCount="0" SamplingPercent="100"
+								Statistics="[_WA_Sys_00000002_BC9C9E3E]"
+								Table="[#EXPLRE_____________________________________________________________________________________________________________000000000007]"
+								Schema="[dbo]" Database="[tempdb]"></StatisticsInfo>
+						</OptimizerStatsUsage>
+						<RelOp NodeId="0" PhysicalOp="Clustered Index Scan"
+							LogicalOp="Clustered Index Scan" EstimateRows="999"
+							EstimatedRowsRead="2000" EstimateIO="0.00608796" EstimateCPU="0.002357"
+							AvgRowSize="15" EstimatedTotalSubtreeCost="0.00844496"
+							TableCardinality="2000" Parallel="0" EstimateRebinds="0"
+							EstimateRewinds="0" EstimatedExecutionMode="Row">
+							<OutputList>
+								<ColumnReference Table="[#EXPLRE]" Column="id"></ColumnReference>
+								<ColumnReference Table="[#EXPLRE]" Column="val"></ColumnReference>
+							</OutputList>
+							<IndexScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0"
+								Storage="RowStore">
+								<DefinedValues>
+									<DefinedValue>
+										<ColumnReference Table="[#EXPLRE]" Column="id"></ColumnReference>
+									</DefinedValue>
+									<DefinedValue>
+										<ColumnReference Table="[#EXPLRE]" Column="val"></ColumnReference>
+									</DefinedValue>
+								</DefinedValues>
+								<Object Database="[tempdb]" Schema="[dbo]" Table="[#EXPLRE]"
+									Index="[PK__#EXPLRE___3213E83F195BEFFF]" Storage="RowStore"></Object>
+								<Predicate>
+									<ScalarOperator ScalarString="[#EXPLRE].[val]&lt;(1000)">
+										<Compare CompareOp="LT">
+											<ScalarOperator>
+												<Identifier>
+													<ColumnReference Table="[#EXPLRE]" Column="val"></ColumnReference>
+												</Identifier>
+											</ScalarOperator>
+											<ScalarOperator>
+												<Const ConstValue="(1000)"></Const>
+											</ScalarOperator>
+										</Compare>
+									</ScalarOperator>
+								</Predicate>
+							</IndexScan>
+						</RelOp>
+					</QueryPlan>
+				</StmtSimple>
+			</Statements>
+		</Batch>
+	</BatchSequence>
+</ShowPlanXML>

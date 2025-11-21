@@ -1,0 +1,73 @@
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.564"
+	Build="16.0.4210.1">
+	<BatchSequence>
+		<Batch>
+			<Statements>
+				<StmtSimple
+					StatementText="-- Фильтруемый индекс&#xa;-- DROP TABLE #EXPLRE;&#xa;-- &#xa;-- CREATE TABLE #EXPLRE (&#xa;--     id INT,&#xa;--     val INT,&#xa;--     category NVARCHAR(50),&#xa;--     description NVARCHAR(100)&#xa;-- );&#xa;-- &#xa;-- Быстрая вставка 20000 строк&#xa;-- ;WITH Numbers AS (&#xa;--     SELECT 1 AS num&#xa;--     UNION ALL&#xa;--     SELECT num + 1&#xa;--     FROM Numbers&#xa;--     WHERE num &lt; 20000&#xa;-- )&#xa;-- INSERT INTO #EXPLRE (id, val, category, description)&#xa;-- SELECT &#xa;--     num,&#xa;--     num,&#xa;--     CASE WHEN num % 3 = 0 THEN &apos;A&apos; WHEN num % 3 = 1 THEN &apos;B&apos; ELSE &apos;C&apos; END,&#xa;--     &apos;Описание_&apos; + CAST(num AS NVARCHAR(10))&#xa;-- FROM Numbers&#xa;-- OPTION (MAXRECURSION 0);&#xa;-- &#xa;-- Создаем фильтруемый индекс (только для category = &apos;A&apos; и val &gt; 10000)&#xa;&#xa;-- CREATE NONCLUSTERED INDEX IX_EXPLRE_Filtered ON #EXPLRE(val) &#xa;-- WHERE val &gt; 10000;&#xa;-- -- &#xa;-- CHECKPOINT;&#xa;-- DBCC DROPCLEANBUFFERS;&#xa;-- SET STATISTICS TIME ON;&#xa;-- SET SHOWPLAN_XML ON;&#xa;-- &#xa;-- Запрос, который использует фильтруемый индекс&#xa;-- SELECT val FROM #EXPLRE &#xa;-- WHERE val &gt; 10000;&#xa;-- &#xa;SELECT id FROM #EXPLRE &#xa;WHERE id &gt; 10000"
+					StatementId="1" StatementCompId="1" StatementType="SELECT"
+					RetrievedFromCache="false" StatementSubTreeCost="0.120097"
+					StatementEstRows="10000" SecurityPolicyApplied="false"
+					StatementOptmLevel="TRIVIAL" QueryHash="0xD54C16381C7D6C17"
+					QueryPlanHash="0x1EF45AF9045B7C6E" CardinalityEstimationModelVersion="160">
+					<StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false"
+						CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true"
+						ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false"></StatementSetOptions>
+					<QueryPlan CachedPlanSize="16" CompileTime="22" CompileCPU="22"
+						CompileMemory="128">
+						<MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0"
+							GrantedMemory="0" MaxUsedMemory="0"></MemoryGrantInfo>
+						<OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="64204"
+							EstimatedPagesCached="40128" EstimatedAvailableDegreeOfParallelism="5"
+							MaxCompileMemory="3343496"></OptimizerHardwareDependentProperties>
+						<OptimizerStatsUsage>
+							<StatisticsInfo LastUpdate="2025-11-21T09:53:31.39"
+								ModificationCount="0" SamplingPercent="100"
+								Statistics="[_WA_Sys_00000001_ADC72A40]"
+								Table="[#EXPLRE_____________________________________________________________________________________________________________000000000012]"
+								Schema="[dbo]" Database="[tempdb]"></StatisticsInfo>
+						</OptimizerStatsUsage>
+						<RelOp NodeId="0" PhysicalOp="Table Scan" LogicalOp="Table Scan"
+							EstimateRows="10000" EstimatedRowsRead="20000" EstimateIO="0.0979398"
+							EstimateCPU="0.022157" AvgRowSize="11"
+							EstimatedTotalSubtreeCost="0.120097" TableCardinality="20000"
+							Parallel="0" EstimateRebinds="0" EstimateRewinds="0"
+							EstimatedExecutionMode="Row">
+							<OutputList>
+								<ColumnReference Database="[tempdb]" Schema="[dbo]"
+									Table="[#EXPLRE]" Column="id"></ColumnReference>
+							</OutputList>
+							<TableScan Ordered="0" ForcedIndex="0" ForceScan="0" NoExpandHint="0"
+								Storage="RowStore">
+								<DefinedValues>
+									<DefinedValue>
+										<ColumnReference Database="[tempdb]" Schema="[dbo]"
+											Table="[#EXPLRE]" Column="id"></ColumnReference>
+									</DefinedValue>
+								</DefinedValues>
+								<Object Database="[tempdb]" Schema="[dbo]" Table="[#EXPLRE]"
+									IndexKind="Heap" Storage="RowStore"></Object>
+								<Predicate>
+									<ScalarOperator
+										ScalarString="[tempdb].[dbo].[#EXPLRE].[id]&gt;(10000)">
+										<Compare CompareOp="GT">
+											<ScalarOperator>
+												<Identifier>
+													<ColumnReference Database="[tempdb]"
+														Schema="[dbo]" Table="[#EXPLRE]" Column="id"></ColumnReference>
+												</Identifier>
+											</ScalarOperator>
+											<ScalarOperator>
+												<Const ConstValue="(10000)"></Const>
+											</ScalarOperator>
+										</Compare>
+									</ScalarOperator>
+								</Predicate>
+							</TableScan>
+						</RelOp>
+					</QueryPlan>
+				</StmtSimple>
+			</Statements>
+		</Batch>
+	</BatchSequence>
+</ShowPlanXML>

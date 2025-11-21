@@ -1,0 +1,81 @@
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.564"
+    Build="16.0.4210.1">
+    <BatchSequence>
+        <Batch>
+            <Statements>
+                <StmtSimple
+                    StatementText="-- некласторизированный индекс&#xa;-- drop table #EXPLRE&#xa;-- -- &#xa;-- CREATE TABLE #EXPLRE (&#xa;--     id INT,&#xa;--     val INT,&#xa;-- &#x9;buffer INT&#xa;-- );&#xa;&#xa;-- Создаем некластеризованный неуникальный составной индекс&#xa;-- CREATE NONCLUSTERED INDEX IX_EXPLRE_Composite ON #EXPLRE(id, val);&#xa;&#xa;-- ;WITH Numbers AS (&#xa;--     SELECT 1 AS num&#xa;--     UNION ALL&#xa;--     SELECT num + 1&#xa;--     FROM Numbers&#xa;--     WHERE num &lt; 20000&#xa;-- )&#xa;-- INSERT INTO #EXPLRE (id, val, buffer)&#xa;-- SELECT num, num, num&#xa;-- FROM Numbers&#xa;-- OPTION (MAXRECURSION 0); --из за 20 000 повторов&#xa;&#xa;-- CHECKPOINT;&#xa;&#xa;&#xa;-- SET STATISTICS TIME ON;&#xa;-- SET SHOWPLAN_XML ON;&#xa;-- &#xa;SELECT id,val from #EXPLRE&#xa;where id &lt; 10000"
+                    StatementId="1" StatementCompId="1" StatementType="SELECT"
+                    RetrievedFromCache="false" StatementSubTreeCost="0.0342809"
+                    StatementEstRows="9999" SecurityPolicyApplied="false"
+                    StatementOptmLevel="TRIVIAL" QueryHash="0x7D75EA61048F3804"
+                    QueryPlanHash="0x9E584CAB3B3B97B2" CardinalityEstimationModelVersion="160">
+                    <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false"
+                        CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true"
+                        ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false"></StatementSetOptions>
+                    <QueryPlan CachedPlanSize="16" CompileTime="5" CompileCPU="5"
+                        CompileMemory="112">
+                        <MemoryGrantInfo SerialRequiredMemory="0" SerialDesiredMemory="0"
+                            GrantedMemory="0" MaxUsedMemory="0"></MemoryGrantInfo>
+                        <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="64204"
+                            EstimatedPagesCached="40128" EstimatedAvailableDegreeOfParallelism="5"
+                            MaxCompileMemory="3344792"></OptimizerHardwareDependentProperties>
+                        <OptimizerStatsUsage>
+                            <StatisticsInfo LastUpdate="2025-11-21T09:38:31.72"
+                                ModificationCount="0" SamplingPercent="100"
+                                Statistics="[IX_EXPLRE_Composite]"
+                                Table="[#EXPLRE_____________________________________________________________________________________________________________000000000010]"
+                                Schema="[dbo]" Database="[tempdb]"></StatisticsInfo>
+                        </OptimizerStatsUsage>
+                        <RelOp NodeId="0" PhysicalOp="Index Seek" LogicalOp="Index Seek"
+                            EstimateRows="9999" EstimatedRowsRead="9999" EstimateIO="0.023125"
+                            EstimateCPU="0.0111559" AvgRowSize="15"
+                            EstimatedTotalSubtreeCost="0.0342809" TableCardinality="20000"
+                            Parallel="0" EstimateRebinds="0" EstimateRewinds="0"
+                            EstimatedExecutionMode="Row">
+                            <OutputList>
+                                <ColumnReference Database="[tempdb]" Schema="[dbo]"
+                                    Table="[#EXPLRE]" Column="id"></ColumnReference>
+                                <ColumnReference Database="[tempdb]" Schema="[dbo]"
+                                    Table="[#EXPLRE]" Column="val"></ColumnReference>
+                            </OutputList>
+                            <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0"
+                                ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                <DefinedValues>
+                                    <DefinedValue>
+                                        <ColumnReference Database="[tempdb]" Schema="[dbo]"
+                                            Table="[#EXPLRE]" Column="id"></ColumnReference>
+                                    </DefinedValue>
+                                    <DefinedValue>
+                                        <ColumnReference Database="[tempdb]" Schema="[dbo]"
+                                            Table="[#EXPLRE]" Column="val"></ColumnReference>
+                                    </DefinedValue>
+                                </DefinedValues>
+                                <Object Database="[tempdb]" Schema="[dbo]" Table="[#EXPLRE]"
+                                    Index="[IX_EXPLRE_Composite]" IndexKind="NonClustered"
+                                    Storage="RowStore"></Object>
+                                <SeekPredicates>
+                                    <SeekPredicateNew>
+                                        <SeekKeys>
+                                            <EndRange ScanType="LT">
+                                                <RangeColumns>
+                                                    <ColumnReference Database="[tempdb]"
+                                                        Schema="[dbo]" Table="[#EXPLRE]" Column="id"></ColumnReference>
+                                                </RangeColumns>
+                                                <RangeExpressions>
+                                                    <ScalarOperator ScalarString="(10000)">
+                                                        <Const ConstValue="(10000)"></Const>
+                                                    </ScalarOperator>
+                                                </RangeExpressions>
+                                            </EndRange>
+                                        </SeekKeys>
+                                    </SeekPredicateNew>
+                                </SeekPredicates>
+                            </IndexScan>
+                        </RelOp>
+                    </QueryPlan>
+                </StmtSimple>
+            </Statements>
+        </Batch>
+    </BatchSequence>
+</ShowPlanXML>

@@ -1,20 +1,38 @@
-DECLARE @фирма NVARCHAR(40) = N'Луч';
-DECLARE @общая_стоимость REAL;
+-- SELECT 
+--     LEFT(Наименование_фирмы, 1) AS Первая_буква,
+--     *
+-- FROM Заказчики;
+-- 
 
-SELECT @общая_стоимость = SUM(Цена_продажи * Количество) 
-FROM Заказы 
-WHERE Заказчик = @фирма;
+-- Запрос для поиска заказов за прошлый месяц
+-- DECLARE @TargetMonth DATE = '2025-10-01';
+-- 
+-- SELECT 
+--     Номер_заказа AS OrderID,
+--     Наименование_товара AS ProductName,
+--     Цена_продажи AS Price,
+--     Количество AS Quantity,
+--     Дата_поставки AS OrderDate,
+--     Заказчик AS CustomerName,
+--     DATEDIFF(DAY, 
+--              Дата_поставки,  -- От даты заказа
+--              @TargetMonth) AS Дней_до_указанного_месяца  -- До целевого месяца
+-- FROM Заказы
+-- WHERE Дата_поставки >= DATEADD(MONTH, -1, DATEADD(MONTH, DATEDIFF(MONTH, 0, @TargetMonth), 0))
+--   AND Дата_поставки < DATEADD(MONTH, DATEDIFF(MONTH, 0, @TargetMonth), 0)
+-- ORDER BY Дата_поставки;
 
-PRINT N'Общая стоимость заказов фирмы ' + @фирма + N': ' + CAST(@общая_стоимость AS NVARCHAR);
-
-DECLARE @товар NVARCHAR(40) = N'Стол';
-DECLARE @закупочная_цена REAL, @средняя_цена_продажи REAL, @маржа REAL;
-
-SELECT @закупочная_цена = Цена FROM Товары WHERE Наименование = @товар;
-SELECT @средняя_цена_продажи = AVG(Цена_продажи) FROM Заказы WHERE Наименование_товара = @товар;
-SET @маржа = @средняя_цена_продажи - @закупочная_цена;
-
-PRINT N'Товар: ' + @товар;
-PRINT N'Закупочная цена: ' + CAST(@закупочная_цена AS NVARCHAR);
-PRINT N'Средняя цена продажи: ' + CAST(@средняя_цена_продажи AS NVARCHAR);
-PRINT N'Маржа: ' + CAST(@маржа AS NVARCHAR);
+-- Запрос для определения дня недели с рекордным количеством заказов
+WITH OrderCounts AS (
+    SELECT 
+        DATENAME(WEEKDAY, Дата_поставки) AS День_недели,
+        DATEPART(WEEKDAY, Дата_поставки) AS Номер_дня_недели,
+        COUNT(*) AS Количество_заказов
+    FROM Заказы
+    GROUP BY DATENAME(WEEKDAY, Дата_поставки), DATEPART(WEEKDAY, Дата_поставки)
+)
+SELECT TOP 1
+    День_недели,
+    Количество_заказов
+FROM OrderCounts
+ORDER BY Количество_заказов DESC, Номер_дня_недели;

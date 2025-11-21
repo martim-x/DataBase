@@ -1,0 +1,46 @@
+-- Фильтруемый индекс
+-- DROP TABLE #EXPLRE;
+-- 
+-- CREATE TABLE #EXPLRE (
+--     id INT,
+--     val INT,
+--     category NVARCHAR(50),
+--     description NVARCHAR(100)
+-- );
+-- 
+-- Быстрая вставка 20000 строк
+-- ;WITH Numbers AS (
+--     SELECT 1 AS num
+--     UNION ALL
+--     SELECT num + 1
+--     FROM Numbers
+--     WHERE num < 20000
+-- )
+-- INSERT INTO #EXPLRE (id, val, category, description)
+-- SELECT 
+--     num,
+--     num,
+--     CASE WHEN num % 3 = 0 THEN 'A' WHEN num % 3 = 1 THEN 'B' ELSE 'C' END,
+--     'Описание_' + CAST(num AS NVARCHAR(10))
+-- FROM Numbers
+-- OPTION (MAXRECURSION 0);
+-- 
+-- Создаем фильтруемый индекс (только для category = 'A' и val > 10000)
+
+-- CREATE NONCLUSTERED INDEX IX_EXPLRE_Filtered ON #EXPLRE(val) 
+-- WHERE val > 10000;
+-- -- 
+-- CHECKPOINT;
+-- DBCC DROPCLEANBUFFERS;
+-- SET STATISTICS TIME ON;
+-- SET SHOWPLAN_XML ON;
+-- 
+-- Запрос, который использует фильтруемый индекс
+-- SELECT val FROM #EXPLRE 
+-- WHERE val > 10000;
+-- 
+SELECT id FROM #EXPLRE 
+WHERE id > 10000;
+
+-- SET SHOWPLAN_XML OFF;
+-- SET STATISTICS TIME OFF;
