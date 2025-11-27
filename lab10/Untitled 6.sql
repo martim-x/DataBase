@@ -1,6 +1,6 @@
 -- FILLFACTOR
 -- DROP TABLE #EXPLRE;
-
+-- 
 -- CREATE TABLE #EXPLRE (
 --     id INT PRIMARY KEY,
 --     val INT,
@@ -28,7 +28,7 @@
 -- CREATE NONCLUSTERED INDEX IX_EXPLRE_FillFactor ON #EXPLRE(val) WITH (FILLFACTOR = 65);
 -- CREATE NONCLUSTERED INDEX IX_EXPLRE_FillFactor ON #EXPLRE(val);
 
--- 
+
 -- Проверяем фрагментацию и страницы
 SELECT 
     i.name AS [Индекс],
