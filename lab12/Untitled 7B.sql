@@ -1,7 +1,8 @@
 -- SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
 
-BEGIN TRAN;
-
-DELETE FROM Заказы WHERE Заказчик = N'Блендер';
+-- BEGIN TRAN;
+-- 
+-- insert into Товары values
+-- (N'13131Тест1', 1111, 1111);
 
 COMMIT TRAN;

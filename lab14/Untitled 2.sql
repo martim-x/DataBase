@@ -1,0 +1,18 @@
+-- CREATE FUNCTION F_CountCustomersByProduct
+-- (
+--     @product NVARCHAR(40)
+-- )
+-- RETURNS INT
+-- AS
+-- BEGIN
+--     DECLARE @result INT;
+-- 
+--     SELECT @result = COUNT(DISTINCT Заказчик)
+--     FROM Заказы
+--     WHERE Наименование_товара = @product;
+-- 
+--     RETURN @result;
+-- END;
+-- GO
+
+-- SELECT dbo.F_CountCustomersByProduct(N'Мышь');

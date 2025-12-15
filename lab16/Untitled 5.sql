@@ -1,0 +1,26 @@
+-- CREATE XML SCHEMA COLLECTION SupplierAddressSchema AS
+-- N'
+-- <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+--   <xs:element name="адрес">
+--     <xs:complexType>
+--       <xs:sequence>
+--         <xs:element name="страна" type="xs:string"/>
+--         <xs:element name="город" type="xs:string"/>
+--         <xs:element name="улица" type="xs:string"/>
+--         <xs:element name="дом" type="xs:string"/>
+--       </xs:sequence>
+--     </xs:complexType>
+--   </xs:element>
+-- </xs:schema>';
+-- ALTER TABLE Поставщики
+-- ALTER COLUMN Адрес XML(SupplierAddressSchema);
+-- UPDATE Поставщики
+-- SET Адрес =
+-- N'<адрес>
+--    <страна>Беларусь</страна>
+--    <город>Гродно</город>
+--    <улица>Советская</улица>
+--    <дом>10</дом>
+--  </адрес>'
+-- WHERE Организация = N'Пинскдрев';
+select * from Поставщики

@@ -1,0 +1,217 @@
+-- create table Logger
+-- (
+-- 	id INT IDENTITY(1,1) PRIMARY KEY,
+-- 	DMLoperator nvarchar(50),
+-- 	triggerName nvarchar(50),
+-- 	comment nvarchar(300)
+-- )
+
+-- SELECT 
+--     name AS TriggerName,
+--     parent_class_desc AS ParentType,
+--     OBJECT_NAME(parent_id) AS TableName,
+--     type_desc AS TriggerType
+-- FROM sys.triggers
+-- ORDER BY TableName, TriggerName;
+
+
+-- 
+-- task1
+-- alter TRIGGER TR_Orders_Insert
+-- ON Товары
+-- AFTER INSERT
+-- AS
+-- BEGIN
+--     INSERT INTO Logger(DMLOperator, TriggerName, Comment)
+--     SELECT N'INSERT', N'TR_Orders_Insert',
+--            N'Добавление товара: ' + Наименование + N', Цена: ' + CAST(Цена AS NVARCHAR(20)) 
+--            + N', Количество: ' + CAST(Количество AS NVARCHAR(20))
+--     FROM inserted;
+-- END;
+-- GO
+-- 
+-- alter TRIGGER TR_Orders_Delete
+-- ON Товары
+-- AFTER DELETE
+-- AS
+-- BEGIN
+--     INSERT INTO Logger(DMLOperator, TriggerName, Comment)
+--     SELECT N'DELETE', N'TR_Orders_Delete',
+--            N'Удаление товара: ' + Наименование + N', Цена: ' + CAST(Цена AS NVARCHAR(20)) 
+--            + N', Количество: ' + CAST(Количество AS NVARCHAR(20))
+--     FROM deleted;
+-- END;
+-- GO
+-- 
+-- task2
+-- go
+-- alter TRIGGER TR_Orders_Update
+-- ON Товары
+-- AFTER UPDATE
+-- AS
+-- BEGIN
+--     INSERT INTO Logger(DMLOperator, TriggerName, Comment)
+--     SELECT N'UPDATE', N'TR_Products',
+--            N'Обновление товара: ' + d.Наименование + N' → ' + i.Наименование
+-- + N', Цена: ' + CAST(d.Цена AS NVARCHAR(20)) + N' → '+ CAST(i.Цена AS NVARCHAR(20))
+--            + N', Количество: ' + CAST(d.Количество AS NVARCHAR(20)) + N' → ' + CAST(i.Количество AS NVARCHAR(20))
+--     FROM inserted i
+--     JOIN deleted d ON i.Наименование = d.Наименование;
+-- END;
+-- GO
+-- Вставка для проверки INSERT триггера (TR_Products с INSERT блоком)
+-- INSERT INTO Товары(Наименование, Цена, Количество) VALUES('Стул', 100, 10);
+-- INSERT INTO Товары(Наименование, Цена, Количество) VALUES('Стол', 200, 5);
+-- 
+-- Обновление для проверки UPDATE триггера
+-- UPDATE Товары SET Количество = 15 WHERE Наименование='Стул';
+-- 
+-- Удаление для проверки DELETE триггера
+-- DELETE FROM Товары WHERE Наименование='Стол';
+-- 
+-- Просмотр логов
+-- SELECT * FROM Logger ORDER BY id;
+
+-- 
+-- go
+-- -- task 4
+-- ALTER TRIGGER TR_Products
+-- ON Товары
+-- AFTER INSERT, UPDATE, DELETE
+-- AS
+-- BEGIN
+--     -- INSERT
+--     INSERT INTO Logger(DMLOperator, TriggerName, Comment)
+--     SELECT N'INSERT', N'TR_Products',
+--            N'Вставка товара: ' + i.Наименование + N', Цена: ' + CAST(i.Цена AS NVARCHAR(20)) 
+--            + N', Количество: ' + CAST(i.Количество AS NVARCHAR(20))
+--     FROM inserted i
+--     WHERE NOT EXISTS (SELECT 1 FROM deleted d WHERE d.Наименование = i.Наименование);
+-- 
+--     -- DELETE
+--     INSERT INTO Logger(DMLOperator, TriggerName, Comment)
+--     SELECT N'DELETE', N'TR_Products',
+--            N'Удаление товара: ' + d.Наименование + N', Цена: ' + CAST(d.Цена AS NVARCHAR(20)) 
+--            + N', Количество: ' + CAST(d.Количество AS NVARCHAR(20))
+--     FROM deleted d
+--     WHERE NOT EXISTS (SELECT 1 FROM inserted i WHERE i.Наименование = d.Наименование);
+-- 
+--     -- UPDATE
+--     INSERT INTO Logger(DMLOperator, TriggerName, Comment)
+--     SELECT N'UPDATE', N'TR_Products',
+--            N'Обновление товара: ' + d.Наименование + N' → ' + i.Наименование
+-- + N', Цена: ' + CAST(d.Цена AS NVARCHAR(20)) + N' → '+ CAST(i.Цена AS NVARCHAR(20))
+--            + N', Количество: ' + CAST(d.Количество AS NVARCHAR(20)) + N' → ' + CAST(i.Количество AS NVARCHAR(20))
+--     FROM inserted i
+--     JOIN deleted d ON d.Наименование = i.Наименование;
+-- END;
+-- GO
+
+-- -- TR_Products уже учитывает все три события
+-- -- Проверка:
+-- INSERT INTO Товары(Наименование, Цена, Количество) VALUES('Лампа', 50, 20);
+-- UPDATE Товары SET Цена = 55 WHERE Наименование='Лампа';
+-- DELETE FROM Товары WHERE Наименование='Лампа';
+-- 
+-- 
+-- -- task 5
+-- -- here should be example
+-- 
+-- 
+-- go
+-- -- task 6
+-- alter TRIGGER TR_Orders_Delete_1
+-- ON Заказы
+-- after DELETE
+-- AS
+-- BEGIN
+--     INSERT INTO Logger(DMLOperator, TriggerName, Comment)
+--     SELECT N'DELETE', 'TR_Orders_Delete_1', 
+--            N'Удален заказ: ' + Номер_заказа
+--     FROM deleted;
+-- 
+-- END;
+-- GO
+-- 
+-- create TRIGGER TR_Orders_Delete_2
+-- ON Заказы
+-- after DELETE
+-- AS
+-- BEGIN
+--     INSERT INTO Logger(DMLOperator, TriggerName, Comment)
+--     SELECT N'DELETE', 'TR_Orders_Delete_2', 
+--            N'Попытка удалить заказ: ' + Номер_заказа
+--     FROM deleted;
+-- 
+-- END;
+-- GO
+-- 
+-- create TRIGGER TR_Orders_Delete_3
+-- ON Заказы
+-- after DELETE
+-- AS
+-- BEGIN
+--     INSERT INTO Logger(DMLOperator, TriggerName, Comment)
+--     SELECT N'DELETE', 'TR_Orders_Delete_3', 
+--            N'Попытка удалить заказ: ' + Номер_заказа
+--     FROM deleted;
+-- 
+-- END;
+-- GO
+-- 
+-- 
+-- -- task 7
+-- -- here should be example
+-- 
+-- -- task 8
+
+-- CREATE TRIGGER TR_Customers_Delete_Block
+-- ON Заказчики
+-- INSTEAD OF DELETE
+-- AS
+-- BEGIN
+--     -- Логирование попытки удаления заказчика
+--     INSERT INTO Logger(DMLoperator, TriggerName, Comment)
+--     SELECT 
+--         N'DELETE', 
+--         N'TR_Customers_Delete_Block',
+--         N'Попытка удалить заказчика: ' 
+--         + d.Наименование_фирмы
+--         + CASE WHEN d.Адрес IS NOT NULL THEN N', Адрес: ' + d.Адрес ELSE N'' END
+--         + N', Расчётный счёт: ' + d.Расчётный_счёт
+--     FROM deleted d;
+-- 
+--     PRINT N'Удаление заказчиков запрещено триггером INSTEAD OF';
+-- END;
+-- GO
+
+-- 
+-- 
+-- go
+-- -- task 9
+-- alter TRIGGER DDL_AllEvents
+-- ON DATABASE
+-- FOR DDL_DATABASE_LEVEL_EVENTS
+-- AS
+-- BEGIN
+--     DECLARE 
+--         @EventType NVARCHAR(50) = EVENTDATA().value('(/EVENT_INSTANCE/EventType)[1]','NVARCHAR(50)'),
+--         @ObjectName NVARCHAR(50) = EVENTDATA().value('(/EVENT_INSTANCE/ObjectName)[1]','NVARCHAR(50)'),
+--         @ObjectType NVARCHAR(50) = EVENTDATA().value('(/EVENT_INSTANCE/ObjectType)[1]','NVARCHAR(50)');
+-- 
+--     INSERT INTO Logger(DMLOperator, TriggerName, Comment)
+--     VALUES ('DDL', 'DDL_AllEvents', N'Событие: ' + @EventType + N', Объект: ' + @ObjectName + N', Тип: ' + @ObjectType);
+-- 
+--     PRINT N'DDL событие перехвачено: ' + @EventType + N', объект: ' + @ObjectName;
+-- 
+--     -- При желании можно блокировать создание/удаление таблиц
+--     IF @EventType IN ('CREATE_TABLE','DROP_TABLE')
+--     BEGIN
+--         RAISERROR(N'Создание или удаление таблицы запрещено',16,1);
+--         ROLLBACK;
+--     END
+-- END;
+-- GO
+
+
+

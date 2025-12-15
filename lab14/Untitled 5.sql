@@ -1,0 +1,53 @@
+--СКАЛЯРНАЯ Scalar
+-- CREATE FUNCTION F_TotalProducts()
+-- RETURNS INT
+-- AS
+-- BEGIN
+--     DECLARE @r INT;
+--     SELECT @r = COUNT(*) FROM Товары;
+--     RETURN @r;
+-- END;
+-- GO
+
+
+-- SELECT dbo.F_TotalProducts() AS КоличествоТоваров;
+-- 
+-- 
+-- -- ВСТРАИВАЕМАЯ ТАБЛИЧНАЯ Inline table-valued
+-- CREATE FUNCTION F_AllProducts()
+-- RETURNS TABLE
+-- AS
+-- RETURN
+-- (
+--     SELECT Наименование, Цена, Количество
+--     FROM Товары
+-- );
+-- GO
+-- 
+-- SELECT * FROM dbo.F_AllProducts();
+-- 
+-- 
+-- -- МНОГООПЕРАТОРНАЯ ТАБЛИЧНАЯ Multi-statement table-valued
+-- 
+-- CREATE FUNCTION F_ProductsWithOrderCount()
+-- RETURNS @t TABLE
+-- (
+--     Товар NVARCHAR(40),
+--     Заказы INT
+-- )
+-- AS
+-- BEGIN
+--     INSERT INTO @t
+--     SELECT 
+--         t.Наименование,
+--         (SELECT COUNT(*) 
+--          FROM Заказы z 
+--          WHERE z.Наименование_товара = t.Наименование)
+--     FROM Товары t;
+-- 
+--     RETURN;
+-- END;
+-- GO
+-- 
+-- 
+SELECT * FROM dbo.F_ProductsWithOrderCount();

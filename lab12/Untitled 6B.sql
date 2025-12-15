@@ -2,6 +2,6 @@
 
 -- begin tran;
 -- insert into Товары values
--- (N'Тест1', 1111, 1111);
+-- (N'1Тест1', 1111, 1111);
 
 commit tran;
