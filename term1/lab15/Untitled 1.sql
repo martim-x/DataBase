@@ -5,7 +5,7 @@
 -- 	triggerName nvarchar(50),
 -- 	comment nvarchar(300)
 -- )
-
+-- 
 -- SELECT 
 --     name AS TriggerName,
 --     parent_class_desc AS ParentType,
@@ -120,6 +120,8 @@
 -- 
 -- go
 -- -- task 6
+-- begin tran 
+-- go
 -- alter TRIGGER TR_Orders_Delete_1
 -- ON Заказы
 -- after DELETE
@@ -127,37 +129,38 @@
 -- BEGIN
 --     INSERT INTO Logger(DMLOperator, TriggerName, Comment)
 --     SELECT N'DELETE', 'TR_Orders_Delete_1', 
---            N'Удален заказ: ' + Номер_заказа
+--            N'Удален заказ: ' + CAST(Номер_заказа AS NVARCHAR(20))
 --     FROM deleted;
 -- 
 -- END;
 -- GO
 -- 
--- create TRIGGER TR_Orders_Delete_2
+-- alter TRIGGER TR_Orders_Delete_2
 -- ON Заказы
 -- after DELETE
 -- AS
 -- BEGIN
 --     INSERT INTO Logger(DMLOperator, TriggerName, Comment)
 --     SELECT N'DELETE', 'TR_Orders_Delete_2', 
---            N'Попытка удалить заказ: ' + Номер_заказа
+--            N'Удален заказ: ' + CAST(Номер_заказа AS NVARCHAR(20))
 --     FROM deleted;
 -- 
 -- END;
 -- GO
--- 
--- create TRIGGER TR_Orders_Delete_3
--- ON Заказы
--- after DELETE
+-- -- 
+-- alter TRIGGER TR_Orders_Delete_3
+--  ON Заказы
+--  after DELETE
 -- AS
 -- BEGIN
 --     INSERT INTO Logger(DMLOperator, TriggerName, Comment)
 --     SELECT N'DELETE', 'TR_Orders_Delete_3', 
---            N'Попытка удалить заказ: ' + Номер_заказа
+--            N'Удален заказ: ' + CAST(Номер_заказа AS NVARCHAR(20))
 --     FROM deleted;
 -- 
 -- END;
 -- GO
+-- commit tran
 -- 
 -- 
 -- -- task 7
@@ -213,5 +216,20 @@
 -- END;
 -- GO
 
-
-
+-- 
+-- 
+-- begin tran
+-- EXEC sp_settriggerorder 
+--      @triggername = 'TR_Orders_Delete_3',  
+--      @order = 'First', 
+--      @stmttype = 'DELETE';
+-- 
+-- EXEC sp_settriggerorder 
+--      @triggername = 'TR_Orders_Delete_2',  
+--      @order = 'Last', 
+--      @stmttype = 'DELETE';
+-- commit tran
+-- begin tran
+-- go
+DELETE TOP (1) FROM dbo.Заказы WHERE Номер_заказа = 'Z002' ;
+-- commit tran
