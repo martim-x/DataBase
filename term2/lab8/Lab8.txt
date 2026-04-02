@@ -1,0 +1,167 @@
+1. Найдите на компьютере-сервере конфигурационные файлы SQLNET.ORA и
+TNSNAMES.ORA и ознакомьтесь с их содержимым.
+
+
+FREE  PDB_TEST  dbconfig
+sh-4.4$ cd dbconfig/FREE/
+sh-4.4$ ls
+listener.ora  orapwFREE  spfileFREE.ora  sqlnet.ora  tnsnames.ora
+sh-4.4$ cat tnsnames.ora 
+FREE =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST=)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = FREE)
+    )
+  )
+
+FREEPDB1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST=)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = FREEPDB1)
+    )
+  )
+
+EXTPROC_CONNECTION_DATA =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC_FOR_FREE))
+    )
+    (CONNECT_DATA =
+      (SID = PLSExtProc)
+      (PRESENTATION = RO)
+    )
+  )
+
+
+h-4.4$ cat tnsnames.ora 
+FREE =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST=)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = FREE)
+    )
+  )
+
+FREEPDB1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST=)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = FREEPDB1)
+    )
+  )
+
+EXTPROC_CONNECTION_DATA =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC_FOR_FREE))
+    )
+    (CONNECT_DATA =
+      (SID = PLSExtProc)
+      (PRESENTATION = RO)
+    )
+  )
+
+sh-4.4$ cat sqlnet.ora 
+NAMES.DIRECTORY_PATH = (EZCONNECT, TNSNAMES)
+# See https://github.com/gvenzl/oci-oracle-xe/issues/43
+DISABLE_OOB=ON
+BREAK_POLL_SKIP=1000
+
+
+
+
+2. Настройте соединение при помощи SQL Developer с сервером Oracle с компьютера-
+клиента. Убедитесь, что соединение работает.
+
+
+3. Настройте соединение при помощи SQLPLUS с сервером Oracle с помощью
+стандартной строки соединения с компьютера-клиента. Убедитесь, что соединение
+работает.
+
+
+sh-4.4$ sqlplus system/111@//localhost:1521/freepdb1
+
+SQL*Plus: Release 23.26.0.0.0 - Production on Thu Apr 2 15:29:31 2026
+Version 23.26.0.0.0
+
+Copyright (c) 1982, 2025, Oracle.  All rights reserved.
+
+Last Successful login time: Thu Mar 19 2026 15:20:29 +00:00
+
+
+4. Запустите утилиту Oracle Net Manager на клиенте и настройте TNS соединение.
+
+sh-4.4$ sed -i 's/(HOST=)/(HOST=localhost)/' tnsnames.ora
+sh-4.4$ cat tnsnames.ora
+FREE =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST=localhost)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = FREE)
+    )
+  )
+
+FREEPDB1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST=localhost)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = FREEPDB1)
+    )
+  )
+
+EXTPROC_CONNECTION_DATA =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = IPC)(KEY = EXTPROC_FOR_FREE))
+    )
+    (CONNECT_DATA =
+      (SID = PLSExtProc)
+      (PRESENTATION = RO)
+    )
+  )
+
+
+
+5. Подключитесь при помощи SQL Developer и SQLPLUS компьютером-клиентом к
+серверу с использованием TNS соединения. Убедитесь, что оба соединения работают.
+
+
+
+sh-4.4$ sqlplus system/111@FREEPDB1 
+
+SQL*Plus: Release 23.26.0.0.0 - Production on Thu Apr 2 15:35:27 2026
+Version 23.26.0.0.0
+
+Copyright (c) 1982, 2025, Oracle.  All rights reserved.
+
+
+TNS — Transparent Network Substrate
+
+
+SQLNET.ORA хранит параметры Oracle Net: порядок разрешения имён 
+TNSNAMES.ORA содержит локальные net service names 
+LISTENER.ORA задаёт параметры Oracle Net Listener:
+
+
+по SERVICE_NAME (современный способ — глобальное имя БД, как в примерах SERVICENAME=pdba.be.by);
+по SID (старый стиль, напрямую к конкретному инстансу);
+по TNS-алиасу из tnsnames.ora (например, CONNECT system/Paw0rd@pdbb);
+по EZCONNECT без tnsnames.ora (user/pass@host:port/service_name).
+
+(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.225)(PORT=1521))(CONNECT DATA=(SERVICE NAME=pdba.be.by)))
+Transparent Network Substrate
+
+
+STARTUP NOMOUNT
+MOUNT
+OPEN
+
+ORA_DBA (и производные типа ORA_<SID>_DBA)
