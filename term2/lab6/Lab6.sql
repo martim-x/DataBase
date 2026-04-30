@@ -530,8 +530,3 @@ SELECT VALUE FROM V$DIAG_INFO WHERE NAME = 'Default Trace File';
 
 -- Смотрим содержимое — там будет CREATE CONTROLFILE
 HOST cat <путь_из_предыдущего_запроса>
-
-
-
-
-
